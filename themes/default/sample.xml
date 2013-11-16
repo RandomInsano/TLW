@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="main.xlst"?>
+<document>
+	<title>Sample Goods</title>   
+	<body>
+		<p>
+			This is an example document, created by Edwin to test out themes to make them
+			absolutely wonderful. Never before have you seen such <em>great</em> words
+			written in a sort of lorum impsum standard.
+		</p>
+		<p>
+			Here, I'm just trying to see how much <a href="http://google.ca">HTML</a> I
+			can get away with in here. I'm hoping all of it, but we'll see.
+		</p>
+	</body>
+	<meta>
+		<author>Edwin Amsler</author>
+		<date>2013-11-16</date>
+		<style>
+			<file>main.css</file>
+		</style>
+	</meta>
+</document>
+

@@ -1,0 +1,11 @@
+body
+{
+	width:		800px;
+	font-family:	tahoma;
+	font-size:	12px;
+}
+
+p,h1,h2,h3,h4,h5
+{
+	display:	block;
+}
