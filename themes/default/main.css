@@ -1,11 +1,19 @@
+@import url(reset.min.css);
+
 body
 {
 	width:		800px;
+	margin:		2em auto;
 	font-family:	tahoma;
-	font-size:	12px;
+	font-size:	16px;
 }
 
-p,h1,h2,h3,h4,h5
+h1
 {
-	display:	block;
+	font-size:	400%;
+}
+
+p
+{
+	margin:		1em 0;
 }
