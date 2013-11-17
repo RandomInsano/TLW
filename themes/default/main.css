@@ -17,3 +17,8 @@ p
 {
 	margin:		1em 0;
 }
+
+ol, ul
+{
+	padding-left:	1em;
+}
