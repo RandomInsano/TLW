@@ -29,7 +29,14 @@
 				<xsl:value-of select="title"/>
 				</h1>
 				<xsl:apply-templates select="body/*"/>
-				<xsl:apply-templates select="edit/*"/>
+				<xsl:if test="edit">
+			                <form name="edit" enctype="multipart/form-data">
+		        	                <textarea name="document" id="document">
+							<xsl:apply-templates select="edit/node()|@*"/>
+						</textarea>
+                        			<input type="submit" value="commit" />
+                			</form>
+				</xsl:if>
 				<div id="docinfo">
 					<xsl:apply-templates select="meta"/>
 				</div>
