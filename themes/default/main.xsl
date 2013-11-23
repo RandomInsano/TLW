@@ -28,7 +28,8 @@
 				<h1>
 				<xsl:value-of select="title"/>
 				</h1>
-				<xsl:apply-templates select="body"/>
+				<xsl:apply-templates select="body/*"/>
+				<xsl:apply-templates select="edit/*"/>
 				<div id="docinfo">
 					<xsl:apply-templates select="meta"/>
 				</div>
