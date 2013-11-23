@@ -59,9 +59,9 @@ class wiky {
 		);
 		$this->replacements=array(
 			// Headings
+			"<h4>$1</h4>",
 			"<h3>$1</h3>",
 			"<h2>$1</h2>",
-			"<h1>$1</h1>",
 	
 			//Formatting
 			"<strong><em>$1</em></strong>",
