@@ -30,7 +30,7 @@
 				</h1>
 				<xsl:apply-templates select="body/*"/>
 				<xsl:if test="edit">
-			                <form name="edit" enctype="multipart/form-data">
+			                <form name="edit" method="post" enctype="multipart/form-data">
 		        	                <textarea name="document" id="document">
 							<xsl:apply-templates select="edit/node()|@*"/>
 						</textarea>
