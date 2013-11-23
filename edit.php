@@ -13,7 +13,7 @@ $IN_FILE = "input.wiki";
 $body = $_POST["document"];
 
 if ($body) {
-//	file_put_contents($IN_FILE);
+	file_put_contents($IN_FILE, $body);
 } else {
 	$body = safeRead($IN_FILE);
 }
