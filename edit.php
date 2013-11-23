@@ -8,14 +8,15 @@ require_once("wiky.inc.php");
 
 $THEME = "default";
 $THEME_LOCATION = "/ewiki/themes/" . $THEME;
-$IN_FILE = "input.wiki";
+$DATA_LOCATION = "data";
 
 $body = $_POST["document"];
+$file = $DATA_LOCATION . "/" . $_GET["i"] . ".wiki";
 
 if ($body) {
-	file_put_contents($IN_FILE, $body);
+	file_put_contents($file, $body);
 } else {
-	$body = safeRead($IN_FILE);
+	$body = safeRead($file);
 }
 
 $doc = editPage($body); 
@@ -26,8 +27,9 @@ $doc->save("php://output");
 
 # Make sure the file we'll read is safe.
 function testFilename($filename) {
-	if (strpos($file, '.') === TRUE) return false;
-	if (preg_match('/wiki$/', $string)) return true;
+	if (strpos($file, '..') === TRUE) return false;		// Has possible directory issues 
+	if (preg_match('/^\//', $filename)) return false;	// Starts with a slash
+	if (preg_match('/wiki$/', $filename)) return true;	// Must end in 'wiki'
 
 	return false;
 }
