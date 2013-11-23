@@ -7,15 +7,25 @@
 require_once("wiky.inc.php");
 
 $THEME = "default";
-$THEME_LOCATION = "themes/" . $THEME;
+$THEME_LOCATION = "/ewiki/themes/" . $THEME;
+$IN_FILE = "input.wiki";
+$OUT_FILE = "data/input.xml";
 
-$wikiFormatter = new wiky();
+// If cached copy is out of date, freshen it. Otherwise, direct to semi-static page
+if (!file_exists($OUT_FILE) ||  filemtime($IN_FILE) > filemtime($OUT_FILE)) {
+	$wikiFormatter = new wiky();
 
-$wikiDoc = parseWikiDoc("input.wiki");
-$doc = createPage("TLW", $wikiDoc, "2011-01-01"); 
+	$wikiDoc = parseWikiDoc($IN_FILE);
+	$doc = createPage("TLW", $wikiDoc, "2011-01-01"); 
+	$doc->save($OUT_FILE);
 
-header("Content-type: text/xml; charset=utf-8");
-$doc->save("php://output");
+	header("Content-type: text/xml; charset=utf-8");
+	$doc->save("php://output");
+}
+else
+{
+	header('Location: ' . $OUT_FILE, true, 307); // Faster than streaming the file via PHP
+}
 
 function parseWikiDoc($file)
 {
