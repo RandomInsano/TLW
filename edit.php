@@ -14,9 +14,10 @@ $body = $_POST["document"];
 if (array_key_exists("i", $_GET))
 {
 	$title = $_GET["i"];
-	if ($title == "")
-		$title = "index";
 }
+if ($title == "")
+	$title = "index";
+
 $file = $DATA_LOCATION . "/" . $title;
 
 if ($body) {
