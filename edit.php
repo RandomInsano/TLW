@@ -4,19 +4,21 @@
 // This is so dangerous if the doc doesn't fit into memory...
 // I need to find a safer way to parse/inject the contents into the XML.
 
-require_once("wiky.inc.php");
+require_once("ewiki.php");
+require_once("config.php");
 
-$THEME = "default";
-$THEME_LOCATION = "/ewiki/themes/" . $THEME;
-$DATA_LOCATION = "data";
+$wm = new WikiManager();
+
 
 $body = $_POST["document"];
-$file = $DATA_LOCATION . "/" . $_GET["i"] . ".wiki";
+$file = $DATA_LOCATION . "/" . $_GET["i"];
 
 if ($body) {
-	file_put_contents($file, $body);
+	file_put_contents($file . ".wiki", $body);
+	$wm->renderText($body, $file . ".xml");
+	header( 'Location: /ewiki/' . $file . ".xml");
 } else {
-	$body = safeRead($file);
+	$body = safeRead($file . ".wiki");
 }
 
 $doc = editPage($body); 
@@ -24,10 +26,9 @@ $doc = editPage($body);
 header("Content-type: text/xml; charset=utf-8");
 $doc->save("php://output");
 
-
 # Make sure the file we'll read is safe.
 function testFilename($filename) {
-	if (strpos($file, '..') === TRUE) return false;		// Has possible directory issues 
+	if (preg_match('/../', $filename)) return false;	// Has possible directory issues 
 	if (preg_match('/^\//', $filename)) return false;	// Starts with a slash
 	if (preg_match('/wiki$/', $filename)) return true;	// Must end in 'wiki'
 

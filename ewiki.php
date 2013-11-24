@@ -19,7 +19,12 @@ class WikiManager
 	public function renderFile($inputFile, $outputFile = NULL)
 	{
 		$wikiDoc = $this->parseWikiDoc($inputFile);
-		$doc = $this->createXMLPage("TLW", $wikiDoc, "2011-01-01"); 
+		$this->renderText($wikiDoc);
+	}
+
+	public function renderText($text, $outputFile = NULL)
+	{
+		$doc = $this->createXMLPage("TLW", $text, "2011-01-01"); 
 
 		if ($outputFile != NULL)
 			$doc->save($outputFile);
