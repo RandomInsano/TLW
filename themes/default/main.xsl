@@ -37,16 +37,18 @@
 							Edit
 						</a>
 					</div>
+				</xsl:if>
+				<div id="content">
 					<xsl:apply-templates select="body/*"/>
-				</xsl:if>
-				<xsl:if test="edit">
-			                <form name="edit" method="post" enctype="multipart/form-data">
-		        	                <textarea name="document" id="document">
-							<xsl:apply-templates select="edit/node()|@*"/>
-						</textarea>
-                        			<input type="submit" value="commit" />
-                			</form>
-				</xsl:if>
+					<xsl:if test="edit">
+						<form name="edit" method="post" enctype="multipart/form-data">
+							<textarea name="document" id="document">
+								<xsl:apply-templates select="edit/node()|@*"/>
+							</textarea>
+							<input type="submit" value="commit" />
+						</form>
+					</xsl:if>
+				</div>
 				<div id="docinfo">
 					<xsl:apply-templates select="meta"/>
 				</div>
