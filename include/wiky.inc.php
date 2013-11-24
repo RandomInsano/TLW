@@ -16,9 +16,9 @@ class wiky {
 	public function __construct($analyze=false) {
 		$this->patterns=array(
 			// Headings
-			"/^==== (.+?) ====$/m",						// Subsubheading
-			"/^=== (.+?) ===$/m",						// Subheading
-			"/^== (.+?) ==$/m",						// Heading
+			"/^====\s*(.+?)\s*====\s*$/m",					// Subsubheading
+			"/^===\s*(.+?)\s*===\s*$/m",					// Subheading
+			"/^==\s*(.+?)\s*==\s*$/m",					// Heading
 	
 			// Formatting
 			"/\'\'\'\'\'(.+?)\'\'\'\'\'/s",					// Bold-italic
@@ -30,6 +30,7 @@ class wiky {
 			"/\[\[(file|img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",		// Other urls with text
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))\]/i",			// Other urls without text
+			"/\[(.*?) (.*)\]/i",						// Internal refs
 	
 			// Indentations
 			"/[\n\r]: *.+([\n\r]:+.+)*/",					// Indentation first pass
@@ -73,6 +74,7 @@ class wiky {
 			"<img src=\"$2\" alt=\"$6\"/>",
 			"<a href=\"$1\">$7</a>",
 			"<a href=\"$1\">$1</a>",
+			"<a href=\"../index.php?i=$1\">$2</a>",
 	
 			// Indentations
 			"\n<dl>$0\n</dl>", // Newline is here to make the second pass easier
