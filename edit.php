@@ -4,7 +4,7 @@
 // This is so dangerous if the doc doesn't fit into memory...
 // I need to find a safer way to parse/inject the contents into the XML.
 
-require_once("ewiki.php");
+require_once("include/ewiki.inc.php");
 require_once("config.php");
 
 $wm = new WikiManager();
