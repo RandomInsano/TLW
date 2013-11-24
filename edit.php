@@ -11,11 +11,17 @@ $wm = new WikiManager();
 
 
 $body = $_POST["document"];
-$file = $DATA_LOCATION . "/" . $_GET["i"];
+if (array_key_exists("i", $_GET))
+{
+	$title = $_GET["i"];
+	if ($title == "")
+		$title = "index";
+}
+$file = $DATA_LOCATION . "/" . $title;
 
 if ($body) {
 	file_put_contents($file . ".wiki", $body);
-	$wm->renderText($body, $file . ".xml");
+	$wm->renderText($body, $title, $file . ".xml");
 	header( 'Location: /ewiki/' . $file . ".xml");
 } else {
 	$body = safeRead($file . ".wiki");

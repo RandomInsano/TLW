@@ -16,15 +16,16 @@ class WikiManager
 		$this->wikiFormatter = new wiky();
 	}
 
-	public function renderFile($inputFile, $outputFile = NULL)
+	public function renderFile($title, $inputFile, $outputFile = NULL)
 	{
-		$wikiDoc = $this->parseWikiDoc($inputFile);
-		$this->renderText($wikiDoc);
+		$text = parseWikiDoc($inputFile);
+		$this->renderText($title, $wikiDoc);
 	}
 
-	public function renderText($text, $outputFile = NULL)
+	public function renderText($text, $title, $outputFile = NULL)
 	{
-		$doc = $this->createXMLPage("TLW", $text, "2011-01-01"); 
+		$text = $this->wikiFormatter->parse($text);
+		$doc = $this->createXMLPage($title, $text, "2011-01-01"); 
 
 		if ($outputFile != NULL)
 			$doc->save($outputFile);
@@ -43,7 +44,7 @@ class WikiManager
 		}
 		$wikiText = file_get_contents($file);
 		$wikiText = htmlspecialchars($wikiText);
-		return $this->wikiFormatter->parse($wikiText);
+		return $wikiText;
 	}
 
 	private function createXMLPage($title, $body, $date, $themeLocation = null) 
