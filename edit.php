@@ -19,30 +19,11 @@ if ($body) {
 	$wm->renderText($body, $title, $file . ".xml");
 	header( 'Location: /ewiki/' . $file . ".xml");
 } else {
-	$body = safeRead($file . ".wiki");
-
+	$body = Tools::safeRead($file . ".wiki");
 	$doc = $wm->editPage($body); 
 
 	header("Content-type: text/xml; charset=utf-8");
 	$doc->save("php://output");
-}
-
-# Make sure the file we'll read is safe.
-function testFilename($filename) {
-	if (preg_match('/../', $filename)) return false;	// Has possible directory issues 
-	if (preg_match('/^\//', $filename)) return false;	// Starts with a slash
-	if (preg_match('/wiki$/', $filename)) return true;	// Must end in 'wiki'
-
-	return false;
-}
-
-function safeRead($filename) {
-	if (testFileName($filename))
-		return "Filename is unsafe. I refuse to read it!";
-	elseif (file_exists($filename))
-		return file_get_contents($filename);
-	else
-		return "";
 }
 
 ?>
