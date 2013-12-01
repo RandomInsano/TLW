@@ -18,13 +18,29 @@ class WikiManager
 	public function renderFile($title, $inputFile, $outputFile = NULL)
 	{
 		$text = parseWikiDoc($inputFile);
-		$this->renderText($title, $wikiDoc);
+		$this->renderText($text, $title, $wikiDoc);
+	}
+
+	public function getAuthor()
+	{
+		if ($_SERVER["PHP_AUTH_USER"])
+		{
+			return $_SERVER["PHP_AUTH_USER"];
+		}
+		else
+		{
+			return $_SERVER["REMOTE_ADDR"];
+		}
 	}
 
 	public function renderText($text, $title, $outputFile = NULL)
 	{
+		// TODO: Handle date/author right
+		$date = date("m.d.y");
+		$author = $this->getAuthor();
+
 		$text = $this->wikiFormatter->parse($text);
-		$doc = $this->createXMLPage($title, $text, "2011-01-01"); 
+		$doc = $this->createXMLPage($title, $text, $author, $date); 
 
 		if ($outputFile != NULL)
 			$doc->save($outputFile);
@@ -46,7 +62,7 @@ class WikiManager
 		return $wikiText;
 	}
 
-	private function createXMLPage($title, $body, $date, $themeLocation = null) 
+	private function createXMLPage($title, $body, $author, $date, $themeLocation = null) 
 	{
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
@@ -69,7 +85,7 @@ class WikiManager
 		$bodyNode    = new DOMElement("body");
 		$metaNode    = new DOMElement("meta");
 		$dateNode    = new DOMElement("date", $date);
-		$authNode    = new DOMElement("author", "Edwin Amsler");
+		$authNode    = new DOMElement("author", $author);
 		$styleNode   = new DOMElement("style");
 		$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
 		
