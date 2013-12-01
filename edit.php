@@ -20,12 +20,12 @@ if ($body) {
 	header( 'Location: /ewiki/' . $file . ".xml");
 } else {
 	$body = safeRead($file . ".wiki");
+
+	$doc = $wm->editPage($body); 
+
+	header("Content-type: text/xml; charset=utf-8");
+	$doc->save("php://output");
 }
-
-$doc = editPage($body); 
-
-header("Content-type: text/xml; charset=utf-8");
-$doc->save("php://output");
 
 # Make sure the file we'll read is safe.
 function testFilename($filename) {
@@ -43,41 +43,6 @@ function safeRead($filename) {
 		return file_get_contents($filename);
 	else
 		return "";
-}
-
-function editPage($body, $themeLocation = null) {
-	$doc = new DOMDocument('1.0', 'UTF-8');
-
-	global $THEME_LOCATION;
-	if ($themeLocation == null)
-		$themeLocation = $THEME_LOCATION;
-
-	if ($body == "")
-		$body = "New page! Oh my gosh!";
-
-	$title = "Editing stuffs";
-
-	// Create nodes
-	$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');
-	$docNode     = new DOMElement("document");
-	$titleNode   = new DOMElement("title", $title); 
-	$editNode    = new DOMElement("edit");
-	$metaNode    = new DOMElement("meta");
-	$styleNode   = new DOMElement("style");
-	$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
-	$contentNode = $doc->createCDATASection($body);
-	
-	// Wire them up
-	$doc->appendChild($xlsNode);
-	$doc->appendChild($docNode);
-	$docNode->appendChild($titleNode);
-	$docNode->appendChild($editNode);
-	$editNode->appendChild($contentNode);
-	$docNode->appendChild($metaNode);
-	$metaNode->appendChild($styleNode);
-	$styleNode->appendChild($fileNode);
-
-	return $doc;
 }
 
 ?>
