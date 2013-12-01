@@ -12,12 +12,17 @@ $wikiFile = $DATA_LOCATION . "/" . $file . ".wiki";
 
 if (file_exists($wikiFile))
 {
+	// TODO: Fix this whole mess
+
 	if (file_exists($xmlFIle))
 	{
 		header("location: " . $xmlFile);
 	}
 	else
 	{
+		header("location: edit.php?i=" . $file . "&t=" . $title);
+		exit;
+
 		// TODO: Forward to a new script to keep this one leaner
 		$wm = new WikiManager();	
 

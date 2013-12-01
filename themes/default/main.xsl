@@ -32,7 +32,7 @@
 					<div id="actions">
 						<a>
 							<xsl:attribute name="href">
-								../edit.php?i=<xsl:value-of select="meta/file">&t=<xsl:value-of select="title" />
+								../edit.php?i=<xsl:value-of select="title" />
 							</xsl:attribute>
 							Edit
 						</a>
