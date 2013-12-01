@@ -17,6 +17,8 @@ class Tools
 
 		if ($value == "")
 			return $default;
+
+		return $value;
 	}
 
 	# Make sure the file we'll read is safe.
