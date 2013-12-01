@@ -5,18 +5,12 @@
 // I need to find a safer way to parse/inject the contents into the XML.
 
 require_once("include/ewiki.inc.php");
+require_once("include/gentools.inc.php");
 require_once("config.php");
 
 $wm = new WikiManager();
-
-
-$body = $_POST["document"];
-if (array_key_exists("i", $_GET))
-{
-	$title = $_GET["i"];
-}
-if ($title == "")
-	$title = "index";
+$body  = Tools::getArray($_POST, "document", NULL); 
+$title = Tools::getArray($_POST, "i", "index");
 
 $file = $DATA_LOCATION . "/" . $title;
 
