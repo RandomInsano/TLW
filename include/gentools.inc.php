@@ -41,7 +41,7 @@ class Tools
 			else
 				return file_get_contents($filename);
 		else
-			return "";
+			return NULL; 
 	}
 }
 

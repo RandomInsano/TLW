@@ -74,7 +74,7 @@ class wiky {
 			"<img src=\"$2\" alt=\"$6\"/>",
 			"<a href=\"$1\">$7</a>",
 			"<a href=\"$1\">$1</a>",
-			"<a href=\"../index.php?i=$1\">$2</a>",
+			"<a href=\"../index.php?i=$1&amp;t=$2\">$2</a>",
 	
 			// Indentations
 			"\n<dl>$0\n</dl>", // Newline is here to make the second pass easier

@@ -1,5 +1,6 @@
 <?php
 $THEME = "default";
-$THEME_LOCATION = "/ewiki/themes/" . $THEME;
+$SITE_LOCATION = "/ewiki";
+$THEME_LOCATION = $SITE_LOCATION . "/themes/" . $THEME;
 $DATA_LOCATION = "data";
 ?>
