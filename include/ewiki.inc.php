@@ -104,7 +104,7 @@ class WikiManager
 		return $doc;
 	}
 
-	public function editPage($body, $themeLocation = null) {
+	public function editPage($body, $title, $themeLocation = null) {
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
 		global $THEME_LOCATION;
@@ -114,7 +114,7 @@ class WikiManager
 		if ($body == "")
 			$body = "New page! Oh my gosh!";
 
-		$title = "Editing stuffs";
+		$title = "Editing: " . $title;
 
 		// Create nodes
 		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');

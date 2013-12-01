@@ -21,7 +21,7 @@ if ($body) {
 	header( 'Location: /ewiki/' . $file . ".xml");
 } else {
 	$body = Tools::safeRead($file . ".wiki");
-	$doc = $wm->editPage($body); 
+	$doc = $wm->editPage($body, $title); 
 
 	header("Content-type: text/xml; charset=utf-8");
 	$doc->save("php://output");
