@@ -33,12 +33,13 @@ class Tools
 	static function safeRead($filename) {
 		global $MAX_FILE_SIZE;
 
-		if (filesize($filename) > $MAX_FILE_SIZE)
-			return "Filesize is too big. I refuse to read it!";
-		elseif (Tools::testFileName($filename))
+		if (Tools::testFileName($filename))
 			return "Filename is unsafe. I refuse to read it!";
 		elseif (file_exists($filename))
-			return file_get_contents($filename);
+			if (filesize($filename) > $MAX_FILE_SIZE)
+				return "Filesize is too big. I refuse to read it!";
+			else
+				return file_get_contents($filename);
 		else
 			return "";
 	}
