@@ -1,16 +1,12 @@
 <?php
 
 require_once("config.php");
+require_once("include/gentools.inc.php");
 
-if (array_key_exists("i",$_GET))
-{
-	$title = $_GET["i"];
-}
+$file  = Tools::getArray($_GET, "i", "index");
+$title = Tools::getArray($_GET, "t", "index");
 
-if ($title == "")
-	$title = "index";
-
-$xmlFile = $DATA_LOCATION . "/" . $title . ".xml";
+$xmlFile = $DATA_LOCATION . "/" . $file . ".xml";
 
 if (file_exists($xmlFile))
 {
@@ -18,7 +14,7 @@ if (file_exists($xmlFile))
 }
 else
 {
-	header("location: edit.php?i=" . $title);
+	header("location: edit.php?i=" . $file . "&t=" . $title);
 }
 
 ?>
