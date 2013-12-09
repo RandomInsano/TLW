@@ -45,4 +45,68 @@ class Tools
 	}
 }
 
+# Really lax version of http://tools.ietf.org/html/rfc561
+# TODO: This is really messy. Clean up implementation, error handling
+class MessageParser
+{
+	private static function assignHeader($line, &$array)
+	{
+		list($key, $val) = preg_split("/:\s*/", $line);
+		
+		if ($val)
+		{
+			print "Assigning " . $key . " with [" . $val . "]\n";
+			$array[$key] = $val;
+		}
+	}
+	
+	// Read each header line and pass it to an optional
+	// processing function. Lets us either skip over the
+	// headers or actually do sometihn with them
+	private static function processHeaders($file, &$headers)
+	{
+		while (($line = fgets($file, 1024)) !== false)
+		{
+			// We're done if we find an empty line
+			if (preg_match("/^\s*$/",$line))
+			{
+				break;
+			}
+			
+			// Remove trailing newline
+			$line = trim($line);
+			
+			MessageParser::assignHeader($line, $headers);
+		}
+	}
+	
+	static function read($filename)
+	{
+		// The fact that I can pass this out is weird...
+		$headers = array();
+	
+		$file = fopen($filename, 'r');
+		MessageParser::processHeaders($file, $headers);
+		
+		return array($headers, $file);
+	}
+	
+	static function write($filename, $headers, $filehandle)
+	{
+		$file = fopen($filename, "w");
+	
+		foreach ($headers as $key => $value)
+		{
+			fprintf($file, "%s: %s", key, value);
+		}
+	
+		while (($line = fgets($file, 1024)) !== false)
+		{
+			fprintf($line, "%s\n", $line);
+		}
+	
+		fclose($file);
+	}	
+}
+
 ?>
