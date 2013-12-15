@@ -13,9 +13,8 @@ $body  = Tools::getArray($_POST, "document", NULL);
 $title = Tools::getArray($_POST, "t", "Unnamed");
 $docname  = Tools::getArray($_GET, "i", "index");
 
-$filePrefix = $DATA_LOCATION . "/" . $docname;
-$wikiFilename = $filePrefix . ".wiki";
-$xmlFilename = $filePrefix . ".xml";
+$wikiFilename = $DATA_LOCATION . "/" . $docname . ".wiki";
+$xmlFilename = $CACHE_LOCATION . "/" . $docname . ".xml";
 
 // TODO: Encap this in a class. People shouldn't touch headers
 //       directly. I'm just trying to get something workable right now

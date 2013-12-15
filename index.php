@@ -7,7 +7,7 @@ require_once("include/ewiki.inc.php");
 $file  = Tools::getArray($_GET, "i", "index");
 $title = Tools::getArray($_GET, "t", "index");
 
-$xmlFile = $DATA_LOCATION . "/" . $file . ".xml";
+$xmlFile = $CACHE_LOCATION . "/" . $file . ".xml";
 $wikiFile = $DATA_LOCATION . "/" . $file . ".wiki";
 
 if (file_exists($wikiFile))
