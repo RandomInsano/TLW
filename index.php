@@ -14,7 +14,7 @@ if (file_exists($wikiFile))
 {
 	// TODO: Fix this whole mess
 
-	if (file_exists($xmlFIle))
+	if (file_exists($xmlFile))
 	{
 		header("location: " . $xmlFile);
 	}
