@@ -15,7 +15,8 @@ class WikiManager
 		$this->wikiFormatter = new wiky();
 	}
 
-	public function renderFile($title, $inputFile, $outputFile = NULL)
+    /* FIXME
+	public function renderFile($title, $inputFile)
 	{
 		if (!file_exists($file))
 		{
@@ -27,10 +28,11 @@ class WikiManager
         $text  = $file;
         $title = $headers["Title"];
         
-		$this->renderText($text, $title, $outputFile);
+		$this->renderText($text, $headers, $outputFile);
         
         fclose($file);
 	}
+    */
 
 	public function getAuthor()
 	{

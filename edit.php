@@ -10,7 +10,7 @@ require_once("config.php");
 
 $wm = new WikiManager();
 $body  = Tools::getArray($_POST, "document", NULL); 
-$title = Tools::getArray($_GET, "t", "index");
+$title = Tools::getArray($_POST, "t", "Unnamed");
 $docname  = Tools::getArray($_GET, "i", "index");
 
 $filePrefix = $DATA_LOCATION . "/" . $docname;
