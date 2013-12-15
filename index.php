@@ -4,11 +4,10 @@ require_once("config.php");
 require_once("include/gentools.inc.php");
 require_once("include/ewiki.inc.php");
 
-$file  = Tools::getArray($_GET, "i", "index");
-$title = Tools::getArray($_GET, "t", "index");
+$docname  = Tools::getArray($_GET, "i", "index");
 
-$xmlFile = $CACHE_LOCATION . "/" . $file . ".xml";
-$wikiFile = $DATA_LOCATION . "/" . $file . ".wiki";
+$xmlFile = $CACHE_LOCATION . "/" . $docname . ".xml";
+$wikiFile = $DATA_LOCATION . "/" . $docname . ".wiki";
 
 if (file_exists($wikiFile))
 {
@@ -20,7 +19,7 @@ if (file_exists($wikiFile))
 	}
 	else
 	{
-		header("location: edit.php?i=" . $file . "&t=" . $title);
+		header("location: edit.php?i=" . $docname);
 		exit;
 
 		// TODO: Forward to a new script to keep this one leaner
@@ -35,7 +34,7 @@ if (file_exists($wikiFile))
 }
 else
 {
-	header("location: edit.php?i=" . $file . "&t=" . $title);
+	header("location: edit.php?i=" . $docname);
 }
 
 ?>
