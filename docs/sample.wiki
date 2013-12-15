@@ -1,0 +1,30 @@
+Title:		Edwin's Sample Wiki Documents
+Author:		Edwin Amsler <edwinguy@gmail.com>
+Author:		Bob Jones <bob@drjones.com>
+Author: 	Martha Stewart <help@mstewart.customersvc.com>
+Author:		root
+Last-Modified:		1385957375
+Content-Location:	sample.wiki
+Content-Type:		text/wiki
+
+This is where the content starts. Just like SMTP and HTTP.
+
+The goal of this format is to be as web-friendly and simple as possible. I was
+going to go for some sort of XML-based format, but the effort in parsing that
+would have been a big pain in the butt. In the future it might make sense to
+keep everything as XML files and just have the UI editing that. But for now
+we'll stick with the wiki formatting and I'll push a bunch of junk in this doc
+that looks like it was pulled straight from a web server's socket buffer.
+
+== Headers ==
+Each header ends with a newline character, with keys and values being delimited
+with a colon followed by any amount of whitespace. The header block ends with
+two consecutive newlines.
+
+=== Author ===
+Author is the most recent author of this page. It's kind of like a capture the
+flag sort of situation with whomever made the last edit being on top.
+
+=== Last-Modified ===
+In the interest of saving myself some effort, the date is stored as a Unix
+timestamp at UTC, then we convert as necessary
