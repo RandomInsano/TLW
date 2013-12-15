@@ -18,7 +18,7 @@ class wiky {
 			// Headings
 			"/^====\s*(.+?)\s*====\s*$/m",					// Subsubheading
 			"/^===\s*(.+?)\s*===\s*$/m",					// Subheading
-			"/^==\s*(.+?)\s*==\s*$/m",					// Heading
+			"/^==\s*(.+?)\s*==\s*$/m",					    // Heading
 	
 			// Formatting
 			"/\'\'\'\'\'(.+?)\'\'\'\'\'/s",					// Bold-italic

@@ -5,6 +5,7 @@
 // I need to find a safer way to parse/inject the contents into the XML.
 
 require_once("wiky.inc.php");
+require_once("gentools.inc.php");
 
 class WikiManager
 {
