@@ -76,7 +76,10 @@ class MessageParser
 			// Remove trailing newline
 			$line = trim($line);
 			
-			MessageParser::assignHeader($line, $headers);
+            if ($headers)
+            {
+                MessageParser::assignHeader($line, $headers);
+            }
 		}
 	}
 	
@@ -91,20 +94,30 @@ class MessageParser
 		return array($headers, $file);
 	}
 	
-	static function write($filename, $headers, $filehandle)
+	static function write($filename, &$headers, $content)
 	{
 		$file = fopen($filename, "w");
 	
 		foreach ($headers as $key => $value)
 		{
-			fprintf($file, "%s: %s", key, value);
+            // I'm just that crazy about things lining up
+			fprintf($file, "%-20s%s\n", $key . ":", $value);
 		}
-	
-		while (($line = fgets($file, 1024)) !== false)
-		{
-			fprintf($line, "%s\n", $line);
-		}
-	
+        fprintf($file, "\n");
+    
+        // If we got a stream, copy it into the output
+        if (get_resource_type($content) === 'stream')
+        {
+            while (($line = fgets($content, 1024)) !== false)
+            {
+                fprintf($file, "%s", $line);
+            }
+        }
+        else
+        {
+            fprintf($file, $content);
+        }
+            
 		fclose($file);
 	}	
 }

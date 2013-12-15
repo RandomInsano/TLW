@@ -12,4 +12,8 @@ print "Blah!\n";
 
 print_r($headers);
 
+$headers['Author'] = "The Grand Canyon";
+
+MessageParser::write("test.wiki", $headers, $file);
+
 ?>
