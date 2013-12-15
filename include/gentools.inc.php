@@ -105,7 +105,7 @@ class MessageParser
         fprintf($file, "\n");
     
         // If we got a stream, copy it into the output
-        if (get_resource_type($content) === 'stream')
+        if (@get_resource_type($content) === 'stream')
         {
             while (($line = fgets($content, 1024)) !== false)
             {

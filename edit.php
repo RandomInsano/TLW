@@ -11,18 +11,30 @@ require_once("config.php");
 $wm = new WikiManager();
 $body  = Tools::getArray($_POST, "document", NULL); 
 $title = Tools::getArray($_GET, "t", "index");
-$file  = Tools::getArray($_GET, "i", "index");
+$docname  = Tools::getArray($_GET, "i", "index");
 
-$file = $DATA_LOCATION . "/" . $file;
+$filePrefix = $DATA_LOCATION . "/" . $docname;
+$wikiFilename = $filePrefix . ".wiki";
+$xmlFilename = $filePrefix . ".xml";
 
-if ($body) {
-	file_put_contents($file . ".wiki", $body);
-	$wm->renderText($body, $title, $file . ".xml");
-	header( 'Location: /ewiki/' . $file . ".xml");
-} else {
-	$body = Tools::safeRead($file . ".wiki");
-	$doc = $wm->editPage($body, $title); 
+// TODO: Encap this in a class. People shouldn't touch headers
+//       directly. I'm just trying to get something workable right now
+$headers = array();
+$headers["Title"] = $title;
+$headers["Author"] = $wm->getAuthor();
+$headers["Last-Modified"] = time();
+$headers["Content-Location"] = $docname;
+$headers["Content-Type"] = "text/wiki"; // Non-IANA MIME here people!
 
+if ($body) 
+{
+    $wm->writePage($wikiFilename, $body, $headers);
+    $wm->renderText($xmlFilename, $body, $headers);
+	header( 'Location: /ewiki/?i=' . $docname);
+}
+else
+{
+	$doc = $wm->editPage($wikiFilename, $headers); 
 	header("Content-type: text/xml; charset=utf-8");
 	$doc->save("php://output");
 }

@@ -44,39 +44,38 @@ class WikiManager
 		}
 	}
 
-	public function renderText($text, $title, $outputFile = NULL)
+	public function renderText($outputFile, $text, $headers)
 	{
-		// TODO: Handle date/author right
-		$date = date("m.d.y");
-		$author = $this->getAuthor();
-
         // Handle stream or text as input text
         if (get_resource_type($text) === 'stream')
             $text = stream_get_contents($text);
         
 		$text = $this->wikiFormatter->parse($text);
-		$doc = $this->createXMLPage($title, $text, $author, $date); 
+		$doc = $this->createXMLPage($text, $headers); 
 
-		if ($outputFile != NULL)
-			$doc->save($outputFile);
-		else
-		{
-			header("Content-type: text/xml; charset=utf-8");
-			$doc->save("php://output");
-		}
+        $doc->save($outputFile);
 	}
     
-    public function editPage($file, $title)
+    public function writePage($file, $body, $headers)
+    {        
+        MessageParser::write($file, $headers, $body);
+    }
+    
+    public function editPage($file, $headers)
     {
-        // TODO: Allow new files to be created
-        list($headers, $content) = MessageParser::read($file);
+        if (file_exists($file))
+        {
+            list($headers, $content) = MessageParser::read($file);
+            
+            // TODO: I'd like this to be handled line by line far down the
+            //       stack
+            $content = stream_get_contents($content);
+        }
         
-        $title = $headers["Title"];
-        
-        return $this->createEditPage(stream_get_contents($content), $title);
+        return $this->createEditPage($content, $headers);
     }
 
-	private function createXMLPage($title, $body, $author, $date, $themeLocation = null) 
+	private function createXMLPage($body, $headers, $themeLocation = null) 
 	{
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
@@ -87,6 +86,12 @@ class WikiManager
 		if ($body == "")
 			$body = "No body text given to createPage on line " . __LINE__;
 
+        // Parse headers
+        $title   = $headers["Title"];
+        $date    = $headers["Last-Modified"];
+        $author  = $headers["Author"];
+        $docname = $headers["Content-Location"];
+            
 		// Turn body HTML into a real document
 		$bodyContentNode = DOMDocument::loadXML("<body>" . $body . "</body>");
 		$bodyContentNode = $bodyContentNode->getElementsByTagName("body")->item(0);
@@ -102,7 +107,8 @@ class WikiManager
 		$authNode    = new DOMElement("author", $author);
 		$styleNode   = new DOMElement("style");
 		$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
-		
+		$nameNode    = new DOMElement("name", $docname);
+        
 		// Wire them up
 		$doc->appendChild($xlsNode);
 		$doc->appendChild($docNode);
@@ -110,6 +116,7 @@ class WikiManager
 		$docNode->appendChild($bodyNode);
 		$bodyNode->appendChild($bodyContentNode);
 		$docNode->appendChild($metaNode);
+        $metaNode->appendChild($nameNode);
 		$metaNode->appendChild($dateNode);
 		$metaNode->appendChild($authNode);
 		$metaNode->appendChild($styleNode);
@@ -118,16 +125,19 @@ class WikiManager
 		return $doc;
 	}
 
-	public function createEditPage($body, $title, $themeLocation = null) {
+	public function createEditPage($content, $metadata, $themeLocation = null) {
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
 		global $THEME_LOCATION;
 		if ($themeLocation == null)
 			$themeLocation = $THEME_LOCATION;
 
-		if ($body == "")
-			$body = "New page! Oh my gosh!";
+		if ($content == "")
+			$content = "New page! Oh my gosh!";
 
+        $title = $metadata["Title"];
+        $docname = $metadata["Content-Location"];
+            
 		// Create nodes
 		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');
 		$docNode     = new DOMElement("document");
@@ -136,7 +146,7 @@ class WikiManager
 		$metaNode    = new DOMElement("meta");
 		$styleNode   = new DOMElement("style");
 		$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
-		$contentNode = $doc->createCDATASection($body);
+		$contentNode = $doc->createCDATASection($content);
 
 		// Wire them up
 		$doc->appendChild($xlsNode);
