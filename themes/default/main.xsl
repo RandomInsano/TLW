@@ -25,41 +25,43 @@
                 <title><xsl:value-of select="title"/></title>
             </head>
             <body>
+            <div id="page">
                 <h1>
-                    <xsl:if test="edit">Editing </xsl:if>
-                    <xsl:value-of select="title"/>
-                </h1>
-                <xsl:if test="body">
-                    <div id="actions">
-                        <a>
-                            <xsl:attribute name="href">
-                                ../edit.php?i=<xsl:value-of select="meta/name" />
-                            </xsl:attribute>
-                            Edit
-                        </a>
-                    </div>
-                </xsl:if>
-                <div id="content">
-                    <xsl:apply-templates select="body/*"/>
-                    <xsl:if test="edit">
-                        <form name="edit" method="post" enctype="multipart/form-data">
-                            <div id="titleEdit">
-                                <label for="title">Title:</label>
-                                <input type="text" id="title" name="t">
-                                    <xsl:attribute name="value">
-                                        <xsl:value-of select="title" />
-                                    </xsl:attribute>
-                                </input>
-                            </div>
-                            <textarea name="document" id="document">
-                                <xsl:apply-templates select="edit/node()|@*"/>
-                            </textarea>
-                            <input type="submit" value="commit" />
-                        </form>
+                        <xsl:if test="edit">Editing </xsl:if>
+                        <xsl:value-of select="title"/>
+                    </h1>
+                    <xsl:if test="body">
+                        <div id="actions">
+                            <a>
+                                <xsl:attribute name="href">
+                                    ../edit.php?i=<xsl:value-of select="meta/name" />
+                                </xsl:attribute>
+                                Edit
+                            </a>
+                        </div>
                     </xsl:if>
-                </div>
-                <div id="docinfo">
-                    <xsl:apply-templates select="meta"/>
+                    <div id="content">
+                        <xsl:apply-templates select="body/*"/>
+                        <xsl:if test="edit">
+                            <form name="edit" method="post" enctype="multipart/form-data">
+                                <div id="titleEdit">
+                                    <label for="title">Title:</label>
+                                    <input type="text" id="title" name="t">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="title" />
+                                        </xsl:attribute>
+                                    </input>
+                                </div>
+                                <textarea name="document" id="document">
+                                    <xsl:apply-templates select="edit/node()|@*"/>
+                                </textarea>
+                                <input type="submit" value="commit" />
+                            </form>
+                        </xsl:if>
+                    </div>
+                    <div id="docinfo">
+                        <xsl:apply-templates select="meta"/>
+                    </div>
                 </div>
             </body>
         </html>
