@@ -17,8 +17,19 @@ class WikiManager
 
 	public function renderFile($title, $inputFile, $outputFile = NULL)
 	{
-		$text = parseWikiDoc($inputFile);
-		$this->renderText($text, $title, $wikiDoc);
+		if (!file_exists($file))
+		{
+			die("No file named " . $file);
+		}
+        
+        list($headers, $file) = MessageParser::read($file);
+        
+        $text  = $file;
+        $title = $headers["Title"];
+        
+		$this->renderText($text, $title, $outputFile);
+        
+        fclose($file);
 	}
 
 	public function getAuthor()
@@ -39,6 +50,10 @@ class WikiManager
 		$date = date("m.d.y");
 		$author = $this->getAuthor();
 
+        // Handle stream or text as input text
+        if (get_resource_type($text) === 'stream')
+            $text = stream_get_contents($text);
+        
 		$text = $this->wikiFormatter->parse($text);
 		$doc = $this->createXMLPage($title, $text, $author, $date); 
 
@@ -50,17 +65,16 @@ class WikiManager
 			$doc->save("php://output");
 		}
 	}
-
-	private function parseWikiDoc($file)
-	{
-		if (!file_exists($file))
-		{
-			die("No file named " . $file);
-		}
-		$wikiText = file_get_contents($file);
-		$wikiText = htmlspecialchars($wikiText);
-		return $wikiText;
-	}
+    
+    public function editPage($file, $title)
+    {
+        // TODO: Allow new files to be created
+        list($headers, $content) = MessageParser::read($file);
+        
+        $title = $headers["Title"];
+        
+        return $this->createEditPage(stream_get_contents($content), $title);
+    }
 
 	private function createXMLPage($title, $body, $author, $date, $themeLocation = null) 
 	{
@@ -104,7 +118,7 @@ class WikiManager
 		return $doc;
 	}
 
-	public function editPage($body, $title, $themeLocation = null) {
+	public function createEditPage($body, $title, $themeLocation = null) {
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
 		global $THEME_LOCATION;
@@ -113,8 +127,6 @@ class WikiManager
 
 		if ($body == "")
 			$body = "New page! Oh my gosh!";
-
-		$title = "Editing: " . $title;
 
 		// Create nodes
 		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');

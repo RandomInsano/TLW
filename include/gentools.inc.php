@@ -55,7 +55,6 @@ class MessageParser
 		
 		if ($val)
 		{
-			print "Assigning " . $key . " with [" . $val . "]\n";
 			$array[$key] = $val;
 		}
 	}
@@ -76,7 +75,7 @@ class MessageParser
 			// Remove trailing newline
 			$line = trim($line);
 			
-            if ($headers)
+            if ($headers !== NULL)
             {
                 MessageParser::assignHeader($line, $headers);
             }
