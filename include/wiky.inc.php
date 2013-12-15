@@ -98,9 +98,9 @@ class wiky {
 			"<li>$1</li>",
 	
 			// Newlines
-			"$0<br/>",
-			"$0<br/>",
-			"<br/>",
+			"$0<br />",
+			"$0<br />",
+			"<br /><br />",
 		);
 		if($analyze) {
 			foreach($this->patterns as $k=>$v) {
