@@ -79,89 +79,75 @@ class WikiManager
         return $this->createEditPage($content, $headers);
     }
 
-	private function createXMLPage($body, $headers, $themeLocation = null) 
+	private function createXMLPage($content, $metadata, $themeLocation = null) 
 	{
 		$doc = new DOMDocument('1.0', 'UTF-8');
 
-		global $THEME_LOCATION;
-		if ($themeLocation == null)
-			$themeLocation = $THEME_LOCATION;
+		if ($content == "")
+			$content = "No body text given to createPage on line " . __LINE__;
 
-		if ($body == "")
-			$body = "No body text given to createPage on line " . __LINE__;
-
-        // Parse headers
-        $title   = $headers["Title"];
-        $date    = $headers["Last-Modified"];
-        $author  = $headers["Author"];
-        $docname = $headers["Content-Location"];
-            
 		// Turn body HTML into a real document
-		$bodyNode = DOMDocument::loadXML("<body>" . $body . "</body>");
-		$bodyNode = $bodyNode->getElementsByTagName("body")->item(0);
-		$bodyNode = $doc->importNode($bodyNode, true);
+		$contentNode = DOMDocument::loadXML("<body>" . $content . "</body>");
+		$contentNode = $contentNode->getElementsByTagName("body")->item(0);
+		$contentNode = $doc->importNode($contentNode, true);
 
-		// Create nodes
-		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');
-		$docNode     = new DOMElement("document");
-		$titleNode   = new DOMElement("title", $title); 
-		$metaNode    = new DOMElement("meta");
-		$dateNode    = new DOMElement("date", $date);
-		$authNode    = new DOMElement("author", $author);
-		$styleNode   = new DOMElement("style");
-		$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
-		$nameNode    = new DOMElement("name", $docname);
-        
-		// Wire them up
-		$doc->appendChild($xlsNode);
-		$doc->appendChild($docNode);
-		$docNode->appendChild($titleNode);
-		$docNode->appendChild($bodyNode);
-		$docNode->appendChild($metaNode);
-        $metaNode->appendChild($nameNode);
-		$metaNode->appendChild($dateNode);
-		$metaNode->appendChild($authNode);
-		$metaNode->appendChild($styleNode);
-		$styleNode->appendChild($fileNode);
-
-		return $doc;
+		return $this->createPage($doc, $contentNode, $metadata, $themeLocation);
 	}
-
-	public function createEditPage($content, $metadata, $themeLocation = null) {
+	
+	public function createEditPage($content, $metadata, $themeLocation = null)
+	{
 		$doc = new DOMDocument('1.0', 'UTF-8');
-
-		global $THEME_LOCATION;
-		if ($themeLocation == null)
-			$themeLocation = $THEME_LOCATION;
-
+	
 		if ($content == "")
 			$content = "New page! Oh my gosh!";
-
-        $title = $metadata["Title"];
-        $docname = $metadata["Content-Location"];
-            
+	
+		$contentNode = $doc->createCDATASection($content);
+		$content     = $doc->createElement("edit");
+		$content->appendChild($contentNode);
+	
+		return $this->createPage($doc, $content, $metadata, $themeLocation);
+	}
+	
+	/* Code common to rendering and editing the wiki pages. It's very specific
+	 * to the two pages right now, but may be made somewhat simpler later. 
+	 */
+	private function createPage($doc, $content, $metadata, $themeLocation = null)
+	{
+		global $THEME_LOCATION;
+		if ($themeLocation == null)
+			$themeLocation = $THEME_LOCATION;
+	
+		// Relevant header goodness
+		$title   = $metadata["Title"];
+		$date    = $metadata["Last-Modified"];
+		$author  = $metadata["Author"];
+		$docname = $metadata["Content-Location"];
+	
 		// Create nodes
 		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');
 		$docNode     = new DOMElement("document");
 		$titleNode   = new DOMElement("title", $title);
-		$editNode    = new DOMElement("edit");
 		$metaNode    = new DOMElement("meta");
+		$dateNode    = new DOMElement("date", $date);
+		$authNode    = new DOMElement("author", $author);
+		$nameNode    = new DOMElement("name", $docname);		
 		$styleNode   = new DOMElement("style");
 		$fileNode    = new DOMElement("file", $themeLocation . "/main.css");
-		$contentNode = $doc->createCDATASection($content);
-
+	
 		// Wire them up
 		$doc->appendChild($xlsNode);
 		$doc->appendChild($docNode);
 		$docNode->appendChild($titleNode);
-		$docNode->appendChild($editNode);
-		$editNode->appendChild($contentNode);
+		$docNode->appendChild($content);
 		$docNode->appendChild($metaNode);
+		$metaNode->appendChild($nameNode);
+		$metaNode->appendChild($dateNode);
+		$metaNode->appendChild($authNode);
 		$metaNode->appendChild($styleNode);
 		$styleNode->appendChild($fileNode);
-
+	
 		return $doc;
-	}
+	}	
 }
 
 ?>
