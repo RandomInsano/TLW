@@ -54,9 +54,7 @@ class wiky {
 			"/^[#\*]+ *(.+)$/m",						// Wraps all list items to <li/>
 	
 			// Newlines (TODO: make it smarter and so that it groupd paragraphs)
-			"/^(?!<li|dd).+(?=(<a|strong|em|img)).+$/mi",			// Ones with breakable elements (TODO: Fix this crap, the li|dd comparison here is just stupid)
-			"/^[^><\n\r]+$/m",						// Ones with no elements
-			"/^\s*$/m",							// Blank lines
+			"/^(?!<li|dd).+(?=(<a|strong|em|img)).+$/mi"			// Ones with breakable elements (TODO: Fix this crap, the li|dd comparison here is just stupid)
 		);
 		$this->replacements=array(
 			// Headings
@@ -83,13 +81,13 @@ class wiky {
 			"<dd>$1</dd>",
 	
 			// Ordered list
-			"\n<ol>\n$0\n</ol>",
+			"\n<ol>$0\n</ol>",
 			"\n<li>$1\n<ol>$2\n</ol>\n</li>",
 			"\n<li>$1\n<ol>$2\n</ol>\n</li>",
 			"\n<li>$1\n<ol>$2\n</ol>\n</li>",
 	
 			// Unordered list
-			"\n<ul>\n$0\n</ul>",
+			"\n<ul>$0\n</ul>",
 			"\n<li>$1\n<ul>$2\n</ul>\n</li>",
 			"\n<li>$1\n<ul>$2\n</ul>\n</li>",
 			"\n<li>$1\n<ul>$2\n</ul>\n</li>",
@@ -98,9 +96,7 @@ class wiky {
 			"<li>$1</li>",
 	
 			// Newlines
-			"$0<br />",
-			"$0<br />",
-			"<br /><br />",
+			"$0<br />"
 		);
 		if($analyze) {
 			foreach($this->patterns as $k=>$v) {
@@ -108,11 +104,25 @@ class wiky {
 			}
 		}
 	}
-	public function parse($input) {
-		if(!empty($input))
-			$output=preg_replace($this->patterns,$this->replacements,$input);
-		else
-			$output=false;
+	
+	private function convertParagraphs($input) {
+		// FIXME: Can't handle headings properly
+	
+		$output = preg_replace("/(.*?)\r\n\r\n/s", "<p>\n$1\n</p>\n", $input);
+		
+		// =+[^=]+?=+
+		
 		return $output;
+	}
+	
+	public function parse($input) {
+		if(!empty($input)) {
+			$output=$this->convertParagraphs($input);
+			$output=preg_replace($this->patterns,$this->replacements,$output);
+			
+			return $output;
+		}
+		else
+			return false;
 	}
 }
