@@ -16,8 +16,6 @@ $docname  = Tools::getArray($_GET, "i", "index");
 $wikiFilename = $DATA_LOCATION . "/" . $docname . ".wiki";
 $xmlFilename = $CACHE_LOCATION . "/" . $docname . ".xml";
 
-// TODO: Encap this in a class. People shouldn't touch headers
-//       directly. I'm just trying to get something workable right now
 $headers = array();
 $headers["Title"] = $title;
 $headers["Author"] = $wm->getAuthor();
