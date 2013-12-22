@@ -60,15 +60,18 @@ class WikiManager
 		$text = $this->wikiFormatter->parse($text);
 		$doc = $this->createXMLPage($text, $headers); 
 
+		Tools::makeFile($outputFile);
         $doc->save($outputFile);
 	}
     
-    public function writePage($file, $body, $headers)
+    public function writePage($filename, $body, $headers)
     {
-    	if (!Tools::testFilename($file))
-    		die("Bad filename specified (" . $file . ")");
+    	if (!Tools::testFilename($filename))
+    		die("Bad filename specified (" . $filename . ")");
+    
+    	Tools::makeFile($filename);
     	
-        MessageParser::write($file, $headers, $body);
+        MessageParser::write($filename, $headers, $body);
     }
     
     public function editPage($file, $headers)

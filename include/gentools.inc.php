@@ -21,8 +21,21 @@ class Tools
 		return $value;
 	}
 
+	static function makeFile($filename)
+	{
+		$filename = dirname($filename);
+		
+		if (!file_exists($filename))
+		{
+			mkdir($filename, 0755, true);
+		}
+		
+		touch($filename);
+	}
+	
 	# Make sure the file we'll read is safe.
-	static function testFilename($filename) {
+	static function testFilename($filename)
+	{
 		if (strpos($filename, '..') !== FALSE)          return false; // Has possible directory issues
 		if (preg_match('/^\//', $filename) === 1)       return false; // Starts with a slash
 		if (preg_match('/wiki|xml$/', $filename) === 1) return true;  // Must end in 'wiki' or XML
@@ -30,7 +43,8 @@ class Tools
 		return false;
 	}
 
-	static function safeRead($filename) {
+	static function safeRead($filename)
+	{
 		global $MAX_FILE_SIZE;
 
 		if (Tools::testFileName($filename))
