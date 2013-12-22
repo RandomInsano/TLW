@@ -37,7 +37,7 @@ class WikiManager
 
 	public function getAuthor()
 	{
-		if ($_SERVER["PHP_AUTH_USER"])
+		if (array_key_exists("PHP_AUTH_USER", $_SERVER))
 		{
 			return $_SERVER["PHP_AUTH_USER"];
 		}
@@ -50,8 +50,9 @@ class WikiManager
 	public function renderText($outputFile, $text, $headers)
 	{
         // Handle stream or text as input text
-        if (get_resource_type($text) === 'stream')
-            $text = stream_get_contents($text);
+        if (!is_string($text))
+        	if (get_resource_type($text) === 'stream')
+            	$text = stream_get_contents($text);
         
 		$text = $this->wikiFormatter->parse($text);
 		$doc = $this->createXMLPage($text, $headers); 
@@ -96,15 +97,14 @@ class WikiManager
         $docname = $headers["Content-Location"];
             
 		// Turn body HTML into a real document
-		$bodyContentNode = DOMDocument::loadXML("<body>" . $body . "</body>");
-		$bodyContentNode = $bodyContentNode->getElementsByTagName("body")->item(0);
-		$bodyContentNode = $doc->importNode($bodyContentNode, true);
+		$bodyNode = DOMDocument::loadXML("<body>" . $body . "</body>");
+		$bodyNode = $bodyNode->getElementsByTagName("body")->item(0);
+		$bodyNode = $doc->importNode($bodyNode, true);
 
 		// Create nodes
 		$xlsNode     = new DOMProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $themeLocation . '/main.xsl"');
 		$docNode     = new DOMElement("document");
 		$titleNode   = new DOMElement("title", $title); 
-		$bodyNode    = new DOMElement("body");
 		$metaNode    = new DOMElement("meta");
 		$dateNode    = new DOMElement("date", $date);
 		$authNode    = new DOMElement("author", $author);
@@ -117,7 +117,6 @@ class WikiManager
 		$doc->appendChild($docNode);
 		$docNode->appendChild($titleNode);
 		$docNode->appendChild($bodyNode);
-		$bodyNode->appendChild($bodyContentNode);
 		$docNode->appendChild($metaNode);
         $metaNode->appendChild($nameNode);
 		$metaNode->appendChild($dateNode);
