@@ -49,6 +49,9 @@ class WikiManager
 
 	public function renderText($outputFile, $text, $headers)
 	{
+		if (!Tools::testFilename($outputFile))
+    		die("Bad filename specified (" . $outputFile . ")");
+				
         // Handle stream or text as input text
         if (!is_string($text))
         	if (get_resource_type($text) === 'stream')
@@ -61,12 +64,18 @@ class WikiManager
 	}
     
     public function writePage($file, $body, $headers)
-    {        
+    {
+    	if (!Tools::testFilename($file))
+    		die("Bad filename specified (" . $file . ")");
+    	
         MessageParser::write($file, $headers, $body);
     }
     
     public function editPage($file, $headers)
     {
+    	if (!Tools::testFilename($file))
+    		die("Bad filename specified (" . $file . ")");
+    		    	
         if (file_exists($file))
         {
             list($headers, $content) = MessageParser::read($file);

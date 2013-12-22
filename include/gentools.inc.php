@@ -22,10 +22,10 @@ class Tools
 	}
 
 	# Make sure the file we'll read is safe.
-	private function testFilename($filename) {
-		if (preg_match('/../', $filename)) return false;        // Has possible directory issues
-		if (preg_match('/^\//', $filename)) return false;       // Starts with a slash
-		if (preg_match('/wiki$/', $filename)) return true;      // Must end in 'wiki'
+	static function testFilename($filename) {
+		if (strpos($filename, '..') !== FALSE)          return false; // Has possible directory issues
+		if (preg_match('/^\//', $filename) === 1)       return false; // Starts with a slash
+		if (preg_match('/wiki|xml$/', $filename) === 1) return true;  // Must end in 'wiki' or XML
 
 		return false;
 	}
