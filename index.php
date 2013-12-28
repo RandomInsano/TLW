@@ -6,6 +6,7 @@ require_once("include/ewiki.inc.php");
 
 $docname  = Tools::getArray($_GET, "i", "index");
 
+$wm = new WikiManager();
 $xmlFile = $CACHE_LOCATION . "/" . $docname . ".xml";
 $wikiFile = $DATA_LOCATION . "/" . $docname . ".wiki";
 
@@ -19,16 +20,7 @@ if (file_exists($wikiFile))
 	}
 	else
 	{
-		header("location: edit.php?i=" . $docname);
-		exit;
-
-		// TODO: Forward to a new script to keep this one leaner
-		$wm = new WikiManager();	
-
-		// Refresh the cache
-		$body = Tools::safeRead($wikiFile);
-		$wm->renderText($body, "FIXME: Need to store title with page", $xmlFile);
-		
+		$wm->renderFile($wikiFile, $xmlFile);
 		header("location: " . $xmlFile);
 	}
 }

@@ -16,24 +16,17 @@ class WikiManager
         $this->wikiFormatter = new wiky();
     }
 
-    /* FIXME
-    public function renderFile($title, $inputFile)
+    public function renderFile($wikiFile, $xmlFile)
     {
-        if (!file_exists($file))
+        if (!file_exists($wikiFile))
         {
             die("No file named " . $file);
         }
         
-        list($headers, $file) = MessageParser::read($file);
+        list($headers, $content) = MessageParser::read($wikiFile);
         
-        $text  = $file;
-        $title = $headers["Title"];
-        
-        $this->renderText($text, $headers, $outputFile);
-        
-        fclose($file);
+        $this->renderText($xmlFile, $content, $headers);
     }
-    */
 
     public function getAuthor()
     {
