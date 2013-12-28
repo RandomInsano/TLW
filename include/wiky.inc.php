@@ -106,12 +106,13 @@ class wiky {
 	}
 	
 	private function convertParagraphs($input) {
-		// FIXME: Can't handle headings properly
+		// Put some padding on the end of the file
+		$input .= "\n\n";
 	
-		$output = preg_replace("/(.*?)\r\n\r\n/s", "<p>\n$1\n</p>\n", $input);
-		
-		// =+[^=]+?=+
-		
+		$output = preg_replace("/(.*?)(\r?\n){2,}/s", "<p>\n$1\n</p>\n", $input);
+	
+		$output = preg_replace("/\n(=+[^=]+?=+)\s.*?\n/s", "</p>\n$1\n<p>\n", $output);	
+
 		return $output;
 	}
 	
